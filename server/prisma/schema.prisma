@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户表
+model User {
+  id        Int      @id @default(autoincrement()) /// 用户ID，自动递增
+  username  String /// 用户名
+  email     String   @unique /// 邮箱
+  password  String /// 密码
+  role      Role     @default(user) /// 角色
+  createdAt DateTime @default(now()) /// 创建时间
+  updatedAt DateTime @default(now()) @updatedAt /// 更新时间
+
+  rentals   Rental[] /// 用户的租赁记录
+  payments  Payment[] /// 用户的支付记录
+  feedbacks Feedback[] /// 用户的反馈记录
+}
+
+// 车辆表
+model Car {
+  id           Int       @id @default(autoincrement()) // 车辆ID，自动递增
+  licensePlate String    @unique /// 牌照
+  model        String /// 型号
+  make         String /// 品牌
+  year         Int /// 年份
+  status       CarStatus /// 状态（可用、租出、维修中等）
+  batteryLevel Int /// 电池电量（百分比）
+  location     String /// 车辆所在位置（如城市、地点）
+  pricePerDay  Float /// 租赁价格（按天计费）
+  createdAt    DateTime  @default(now()) /// 录入时间
+  updatedAt    DateTime  @default(now()) @updatedAt /// 信息更新时间
+
+  rentals     Rental[] /// 车辆的租赁记录
+  maintenance CarMaintenance[] /// 车辆的维护记录
+  feedbacks   Feedback[] /// 车辆的反馈记录
+}
+
+// 租赁记录表
+model Rental {
+  id         Int          @id @default(autoincrement()) // 租赁记录ID，自动递增
+  userId     Int /// 外键，关联用户ID
+  carId      Int /// 外键，关联车辆ID
+  startTime  DateTime /// 租赁开始时间
+  endTime    DateTime /// 租赁结束时间
+  totalPrice Float /// 租赁总价
+  status     RentalStatus /// 租赁状态（进行中、已完成、已取消）
+  createdAt  DateTime     @default(now()) /// 记录创建时间
+  updatedAt  DateTime     @default(now()) @updatedAt /// 记录更新时间
+
+  user     User      @relation(fields: [userId], references: [id]) /// 关联 User 表
+  car      Car       @relation(fields: [carId], references: [id]) /// 关联 Car 表
+  payments Payment[] /// 反向关系字段，关联 Payment 表
+}
+
+// 支付记录表
+model Payment {
+  id            Int           @id @default(autoincrement()) // 支付记录ID，自动递增
+  userId        Int /// 外键，关联用户ID
+  rentalId      Int /// 外键，关联租赁记录ID
+  paymentStatus PaymentStatus /// 支付状态（待支付、已完成、失败）
+  paymentDate   DateTime /// 支付日期
+
+  user   User   @relation(fields: [userId], references: [id]) /// 关联 User 表
+  rental Rental @relation(fields: [rentalId], references: [id]) /// 关联 Rental 表
+}
+
+// 车辆维护记录表
+model CarMaintenance {
+  id              Int      @id @default(autoincrement()) // 维护记录ID，自动递增
+  carId           Int /// 外键，关联车辆ID
+  maintenanceType String /// 维护类型（如电池更换等）
+  description     String? /// 维护描述（可选）
+  createdAt       DateTime @default(now()) /// 记录创建时间
+  updatedAt       DateTime @default(now()) @updatedAt /// 记录更新时间
+
+  car Car @relation(fields: [carId], references: [id]) /// 关联 Car 表
+}
+
+// 用户反馈表
+model Feedback {
+  id        Int      @id @default(autoincrement()) // 反馈记录ID，自动递增
+  userId    Int /// 外键，关联用户ID
+  carId     Int /// 外键，关联车辆ID
+  rating    Int /// 评分（如1-5星）
+  comment   String? /// 反馈内容（可选）
+  createdAt DateTime @default(now()) /// 记录创建时间
+
+  user User @relation(fields: [userId], references: [id]) /// 关联 User 表
+  car  Car  @relation(fields: [carId], references: [id]) /// 关联 Car 表
+}
+
+// 用户角色枚举
+enum Role {
+  user /// 普通用户
+  admin /// 管理员
+  manager /// 车辆管理人员
+}
+
+// 车辆状态枚举
+enum CarStatus {
+  available /// 可用
+  rented /// 已租出
+  maintenance /// 维修中
+}
+
+// 租赁状态枚举
+enum RentalStatus {
+  active /// 进行中
+  completed /// 已完成
+  cancelled /// 已取消
+}
+
+// 支付状态枚举
+enum PaymentStatus {
+  pending /// 待支付
+  completed /// 已完成
+  failed /// 失败
+}
