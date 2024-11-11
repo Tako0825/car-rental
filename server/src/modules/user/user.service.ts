@@ -106,26 +106,48 @@ export class UserService {
 
     // 删除
     async remove(id: number) {
+        /**
+         *  user -> car & rental & feedback
+         *  car -> rental & feedback & carMaintenance
+         *  rental -> payment
+         */
         await this.prisma.$transaction(async () => {
             await this.findOne(id)
+            const userId = id
             const dbUser = await this.prisma.user.findUnique({
                 where: { id },
-                select: { rentals: true }
+                select: {
+                    rentals: true,
+                    cars: true
+                }
             })
 
-            const userId = id
-            const rentals = dbUser.rentals
-            const rentalIds = rentals.map(rental => rental.id)
+            const carIds = dbUser.cars.map(car => car.id)
+            const rentalsFromCar = await this.prisma.rental.findMany({
+                where: { carId: { in: carIds } }
+            })
+            const rentalsFromUser = dbUser.rentals
+            const rentalIds = [...rentalsFromCar, ...rentalsFromUser].map(
+                rental => rental.id
+            )
 
             await this.prisma.payment.deleteMany({
                 where: {
-                    OR: [{ rentalId: { in: rentalIds } }, { userId }]
+                    OR: [{ rentalId: { in: rentalIds } }]
                 }
             })
             await Promise.all([
-                this.prisma.rental.deleteMany({ where: { userId } }),
-                this.prisma.feedback.deleteMany({ where: { userId } })
+                this.prisma.rental.deleteMany({
+                    where: { OR: [{ carId: { in: carIds } }, { userId }] }
+                }),
+                this.prisma.feedback.deleteMany({
+                    where: { OR: [{ carId: { in: carIds } }, { userId }] }
+                }),
+                this.prisma.carMaintenance.deleteMany({
+                    where: { OR: [{ carId: { in: carIds } }] }
+                })
             ])
+            await this.prisma.car.deleteMany({ where: { userId } })
             await this.prisma.user.delete({ where: { id } })
         })
 

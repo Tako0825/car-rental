@@ -23,14 +23,15 @@ model User {
   createdAt DateTime @default(now()) /// 创建时间
   updatedAt DateTime @default(now()) @updatedAt /// 更新时间
 
+  cars      Car[] // 用户的出租车辆
   rentals   Rental[] /// 用户的租赁记录
-  payments  Payment[] /// 用户的支付记录
   feedbacks Feedback[] /// 用户的反馈记录
 }
 
 // 车辆表
 model Car {
   id           Int       @id @default(autoincrement()) // 车辆ID，自动递增
+  userId       Int? /// 外键，关联用户ID
   licensePlate String    @unique /// 牌照
   model        String /// 型号
   make         String /// 品牌
@@ -42,6 +43,7 @@ model Car {
   createdAt    DateTime  @default(now()) /// 录入时间
   updatedAt    DateTime  @default(now()) @updatedAt /// 信息更新时间
 
+  user        User?            @relation(fields: [userId], references: [id]) /// 关联 User 表
   rentals     Rental[] /// 车辆的租赁记录
   maintenance CarMaintenance[] /// 车辆的维护记录
   feedbacks   Feedback[] /// 车辆的反馈记录
@@ -67,12 +69,10 @@ model Rental {
 // 支付记录表
 model Payment {
   id            Int           @id @default(autoincrement()) // 支付记录ID，自动递增
-  userId        Int /// 外键，关联用户ID
   rentalId      Int /// 外键，关联租赁记录ID
   paymentStatus PaymentStatus /// 支付状态（待支付、已完成、失败）
   paymentDate   DateTime /// 支付日期
 
-  user   User   @relation(fields: [userId], references: [id]) /// 关联 User 表
   rental Rental @relation(fields: [rentalId], references: [id]) /// 关联 Rental 表
 }
 
