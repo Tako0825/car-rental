@@ -4,8 +4,8 @@ import { LoginRequestDto, LoginResponseDto } from './dtos/login.dto'
 import { JwtService } from '@nestjs/jwt'
 import { RegisterRequestDto, RegisterResponseDto } from './dtos/regiter.dto'
 import { createHash } from 'crypto'
-import { User } from '@prisma/client'
 import { omit } from 'lodash'
+import { UserEntity } from 'src/types/entities'
 
 @Injectable()
 export class AuthService {
@@ -50,7 +50,7 @@ export class AuthService {
             )
         }
         const passwordHash = createHash('sha256').update(password).digest('hex')
-        const createdUser: User = await this.prisma.user.create({
+        const createdUser: UserEntity = await this.prisma.user.create({
             data: Object.assign(body, { password: passwordHash })
         })
 
@@ -60,12 +60,12 @@ export class AuthService {
                 payload: { email },
                 sign: process.env.SECRET_OR_KEY
             }),
-            user: omit(createdUser, ['password']) // 过滤密码
+            user: omit(createdUser, ['password', 'email']) // 过滤邮箱和密码
         }
     }
 
     // 自动登录
-    async autoLogin(user: User) {
+    async autoLogin(user: UserEntity) {
         delete user.password
         return {
             user

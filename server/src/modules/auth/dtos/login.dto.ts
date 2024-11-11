@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty } from 'class-validator'
-import { User } from '@prisma/client'
+import { UserEntity } from 'src/types/entities'
 
-export class LoginRequestDto implements Partial<User> {
+export class LoginRequestDto implements Partial<UserEntity> {
     @IsNotEmpty({ message: '请输入邮箱' })
     @IsEmail({}, { message: '邮箱格式不正确' })
     email: string
