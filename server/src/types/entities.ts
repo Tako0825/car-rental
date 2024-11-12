@@ -1,4 +1,4 @@
-import { $Enums, Car, Rental, User } from '@prisma/client'
+import { $Enums, Car, Payment, Rental, User } from '@prisma/client'
 
 export class UserEntity implements User {
     id: number = 0
@@ -35,4 +35,11 @@ export class RentalEntity implements Rental {
     startTime: Date = new Date()
     endTime: Date = new Date()
     totalPrice: number = 0
+}
+
+export class PaymentEntity implements Payment {
+    id: number = 0
+    rentalId: number = 0
+    paymentStatus: $Enums.PaymentStatus = 'pending'
+    paymentDate: Date = new Date()
 }
