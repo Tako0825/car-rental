@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module'
 import { CarModule } from './modules/car/car.module'
 import { RentalModule } from './modules/rental/rental.module'
 import { PaymentModule } from './modules/payment/payment.module'
+import { CarMaintenanceModule } from './modules/car-maintenance/car-maintenance.module'
 
 @Module({
     imports: [
@@ -25,7 +26,8 @@ import { PaymentModule } from './modules/payment/payment.module'
         UserModule,
         CarModule,
         RentalModule,
-        PaymentModule
+        PaymentModule,
+        CarMaintenanceModule
     ],
     controllers: [],
     providers: [JwtStrategy, PrismaService]

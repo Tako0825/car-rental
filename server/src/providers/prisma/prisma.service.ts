@@ -1,6 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { Prisma, PrismaClient } from '@prisma/client'
-import { CarEntity, PaymentEntity, RentalEntity, UserEntity } from 'src/types/entities'
+import {
+    CarEntity,
+    CarMaintenanceEntity,
+    PaymentEntity,
+    RentalEntity,
+    UserEntity
+} from 'src/types/entities'
 
 export type PrismaModelKeys = Exclude<keyof PrismaService, `$${string}` | `_${string}`>
 
@@ -42,6 +48,15 @@ export class PrismaService extends PrismaClient {
     // 查询支付记录实体
     async findPaymentEntity(id: number) {
         return await this.findEntity<PaymentEntity>('payment', { id }, { tip: '支付记录不存在' })
+    }
+
+    // 查询维修记录实体
+    async findCarMaintenanceEntity(id: number) {
+        return await this.findEntity<CarMaintenanceEntity>(
+            'carMaintenance',
+            { id },
+            { tip: '维修记录不存在' }
+        )
     }
 
     // 分页查询
