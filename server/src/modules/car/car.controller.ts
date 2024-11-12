@@ -7,7 +7,8 @@ import {
     Param,
     Delete,
     UseGuards,
-    UsePipes
+    UsePipes,
+    ParseIntPipe
 } from '@nestjs/common'
 import { CarService } from './car.service'
 import { AuthGuard } from '@nestjs/passport'
@@ -37,21 +38,21 @@ export class CarController {
 
     // 详细查询
     @Get(':id')
-    async findOne(@Param('id') id: string) {
-        return await this.carService.findOne(+id)
+    async findOne(@Param('id', ParseIntPipe) id: number) {
+        return await this.carService.findOne(id)
     }
 
     // 更改
     @Patch(':id')
-    async update(@Param('id') id: string, @Body() body: UpdateCarRequestDto) {
-        return await this.carService.update(+id, body)
+    async update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateCarRequestDto) {
+        return await this.carService.update(id, body)
     }
 
     // 删除
     @Delete(':id')
     @RequiredRoles('admin')
     @UseGuards(AuthGuard('jwt'), RoleGuard)
-    async remove(@Param('id') id: string) {
-        return await this.carService.remove(+id)
+    async remove(@Param('id', ParseIntPipe) id: number) {
+        return await this.carService.remove(id)
     }
 }

@@ -7,7 +7,6 @@ import {
     Param,
     Delete,
     UsePipes,
-    Req,
     UseGuards,
     ParseIntPipe
 } from '@nestjs/common'
@@ -32,10 +31,8 @@ export class RentalController {
     // 创建
     @Post()
     @UseGuards(AuthGuard('jwt'))
-    async create(@Req() req: Request, @Body() body: CreateRentalRequestDto) {
-        await this.userService.findOne(body.userId)
-        await this.carService.findOne(body.carId)
-        return await this.rentalService.create(body, +req['user']['id'])
+    async create(@Body() body: CreateRentalRequestDto) {
+        return await this.rentalService.create(body)
     }
 
     // 分页查询
@@ -53,13 +50,7 @@ export class RentalController {
     // 更改
     @Patch(':id')
     @UseGuards(AuthGuard('jwt'))
-    async update(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() body: UpdateRentalRequestDto
-    ) {
-        if (id) await this.rentalService.findOne(id)
-        if (body.userId) await this.userService.findOne(body.userId)
-        if (body.carId) await this.carService.findOne(body.carId)
+    async update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateRentalRequestDto) {
         return this.rentalService.update(id, body)
     }
 
@@ -67,7 +58,6 @@ export class RentalController {
     @Delete(':id')
     @UseGuards(AuthGuard('jwt'))
     async remove(@Param('id', ParseIntPipe) id: number) {
-        await this.rentalService.findOne(id)
         return this.rentalService.remove(+id)
     }
 }

@@ -6,7 +6,8 @@ import {
     Param,
     Delete,
     UsePipes,
-    UseGuards
+    UseGuards,
+    ParseIntPipe
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { UpdateUserRequestDto } from './dtos/update-user.dto'
@@ -29,21 +30,21 @@ export class UserController {
 
     // 详细查询
     @Get(':id')
-    async findOne(@Param('id') id: string) {
-        return await this.userService.findOne(+id)
+    async findOne(@Param('id', ParseIntPipe) id: number) {
+        return await this.userService.findOne(id)
     }
 
     // 更改
     @Patch(':id')
-    async update(@Param('id') id: string, @Body() body: UpdateUserRequestDto) {
-        return await this.userService.update(+id, body)
+    async update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserRequestDto) {
+        return await this.userService.update(id, body)
     }
 
     // 删除
     @Delete(':id')
     @RequiredRoles('admin')
     @UseGuards(AuthGuard('jwt'), RoleGuard)
-    async remove(@Param('id') id: string) {
-        return await this.userService.remove(+id)
+    async remove(@Param('id', ParseIntPipe) id: number) {
+        return await this.userService.remove(id)
     }
 }

@@ -2,10 +2,7 @@ import { $Enums } from '@prisma/client'
 import { UserEntity } from 'src/types/entities'
 import { PaginationRequest, PaginationResponse } from 'src/types/pagination'
 
-export class FindManyUserRequestDto
-    extends PaginationRequest
-    implements Partial<UserEntity>
-{
+export class FindManyUserRequestDto extends PaginationRequest implements Partial<UserEntity> {
     id?: number
     createdAt?: Date
     email?: string

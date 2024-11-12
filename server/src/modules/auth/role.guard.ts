@@ -8,14 +8,9 @@ import { UserEntity } from 'src/types/entities'
 export class RoleGuard implements CanActivate {
     constructor(private reflector: Reflector) {}
 
-    canActivate(
-        context: ExecutionContext
-    ): boolean | Promise<boolean> | Observable<boolean> {
+    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const user: UserEntity = context.switchToHttp().getRequest().user
-        const requiredRoles = this.reflector.get<string[]>(
-            'role',
-            context.getHandler()
-        )
+        const requiredRoles = this.reflector.get<string[]>('role', context.getHandler())
         return requiredRoles.includes(user.role) ? true : false
     }
 }

@@ -4,9 +4,7 @@ import { $Enums } from '@prisma/client'
 import { IsOptional } from 'class-validator'
 import { RentalEntity } from 'src/types/entities'
 
-export class UpdateRentalRequestDto extends PartialType(
-    CreateRentalRequestDto
-) {
+export class UpdateRentalRequestDto extends PartialType(CreateRentalRequestDto) {
     @IsOptional()
     userId?: number
     @IsOptional()

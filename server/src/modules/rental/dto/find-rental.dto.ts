@@ -2,10 +2,7 @@ import { $Enums } from '@prisma/client'
 import { RentalEntity } from 'src/types/entities'
 import { PaginationRequest, PaginationResponse } from 'src/types/pagination'
 
-export class FindPageRentalRequestDto
-    extends PaginationRequest
-    implements Partial<RentalEntity>
-{
+export class FindPageRentalRequestDto extends PaginationRequest implements Partial<RentalEntity> {
     id?: number
     createdAt?: Date
     updatedAt?: Date

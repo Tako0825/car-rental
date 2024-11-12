@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
 import { LoginRequestDto, LoginResponseDto } from './dtos/login.dto'
 import { JwtService } from '@nestjs/jwt'
@@ -14,21 +14,22 @@ export class AuthService {
         private readonly jwt: JwtService
     ) {}
 
+    // 哈希加密
+    hashPassword(password: string) {
+        return createHash('sha256').update(password).digest('hex')
+    }
+
     // 登录
     async login(body: LoginRequestDto): Promise<LoginResponseDto> {
         const { email, password } = body
         const dbUser = await this.prisma.user.findUnique({ where: { email } })
-        if (!dbUser)
-            throw new HttpException(
-                { tip: '邮箱未注册' },
-                HttpStatus.UNPROCESSABLE_ENTITY // 422
-            )
+        if (!dbUser) {
+            throw new HttpException({ tip: '邮箱未注册' }, 422)
+        }
         const passwordHash = createHash('sha256').update(password).digest('hex')
-        if (passwordHash !== dbUser.password)
-            throw new HttpException(
-                { tip: '密码错误' },
-                HttpStatus.UNPROCESSABLE_ENTITY // 422
-            )
+        if (passwordHash !== dbUser.password) {
+            throw new HttpException({ tip: '密码错误' }, 422)
+        }
 
         return {
             tip: '登录成功',
@@ -44,14 +45,11 @@ export class AuthService {
         const { email, password } = body
         const dbUser = await this.prisma.user.findUnique({ where: { email } })
         if (dbUser) {
-            throw new HttpException(
-                { tip: '邮箱已注册' },
-                HttpStatus.UNPROCESSABLE_ENTITY // 422
-            )
+            throw new HttpException({ tip: '邮箱已注册' }, 422)
         }
-        const passwordHash = createHash('sha256').update(password).digest('hex')
+        const passwordHash = this.hashPassword(password)
         const createdUser: UserEntity = await this.prisma.user.create({
-            data: Object.assign(body, { password: passwordHash })
+            data: { ...body, password: passwordHash }
         })
 
         return {

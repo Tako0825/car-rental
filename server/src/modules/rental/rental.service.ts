@@ -1,12 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common'
-import {
-    CreateRentalRequestDto,
-    CreateRentalResponseDto
-} from './dto/create-rental.dto'
-import {
-    UpdateRentalRequestDto,
-    UpdateRentalResponseDto
-} from './dto/update-rental.dto'
+import { CreateRentalRequestDto, CreateRentalResponseDto } from './dto/create-rental.dto'
+import { UpdateRentalRequestDto, UpdateRentalResponseDto } from './dto/update-rental.dto'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
 import {
     FindOneRentalResponseDto,
@@ -21,13 +15,12 @@ export class RentalService {
     constructor(private readonly prisma: PrismaService) {}
 
     // 创建
-    async create(
-        body: CreateRentalRequestDto,
-        userId: number
-    ): Promise<CreateRentalResponseDto> {
-        const createdRental = await this.prisma.rental.create({
-            data: { ...body, userId }
-        })
+    async create(body: CreateRentalRequestDto): Promise<CreateRentalResponseDto> {
+        const { carId, userId } = body
+        await this.prisma.findUserEntity(userId)
+        await this.prisma.findCarEntity(carId)
+
+        const createdRental = await this.prisma.rental.create({ data: body })
         return {
             tip: '创建成功',
             rental: createdRental
@@ -35,9 +28,7 @@ export class RentalService {
     }
 
     // 分页查询
-    async findPage(
-        body: FindPageRentalRequestDto
-    ): Promise<FindPageRentalResponseDto> {
+    async findPage(body: FindPageRentalRequestDto): Promise<FindPageRentalResponseDto> {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new RentalEntity()))
 
@@ -73,10 +64,11 @@ export class RentalService {
     }
 
     // 更改
-    async update(
-        id: number,
-        body: UpdateRentalRequestDto
-    ): Promise<UpdateRentalResponseDto> {
+    async update(id: number, body: UpdateRentalRequestDto): Promise<UpdateRentalResponseDto> {
+        if (id) await this.prisma.findRentalEntity(id)
+        if (body.userId) await this.prisma.findUserEntity(body.userId)
+        if (body.carId) await this.prisma.findCarEntity(body.carId)
+
         const updatedRental = await this.prisma.rental.update({
             where: { id },
             data: body
@@ -90,14 +82,11 @@ export class RentalService {
 
     // 删除
     async remove(id: number) {
-        /**
-         *  rental -> payment
-         */
+        await this.prisma.findRentalEntity(id)
         await this.prisma.$transaction(async () => {
             await this.prisma.payment.deleteMany({ where: { rentalId: id } })
             await this.prisma.rental.delete({ where: { id } })
         })
-
         return {
             tip: '删除成功'
         }

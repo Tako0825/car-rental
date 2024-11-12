@@ -9,9 +9,7 @@ import {
 // 校验请求体
 @Injectable()
 export class BodyValidationPipe extends ValidationPipe {
-    protected flattenValidationErrors(
-        validationErrors: ValidationError[]
-    ): string[] {
+    protected flattenValidationErrors(validationErrors: ValidationError[]): string[] {
         const error = new Object()
         validationErrors.forEach(item => {
             error[item.property] = Object.values(item.constraints)

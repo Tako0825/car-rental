@@ -1,12 +1,5 @@
 import { $Enums } from '@prisma/client'
-import {
-    IsEnum,
-    IsNotEmpty,
-    IsNumber,
-    Max,
-    MaxLength,
-    Min
-} from 'class-validator'
+import { IsEnum, IsNotEmpty, IsNumber, Max, MaxLength, Min } from 'class-validator'
 import { CarEntity } from 'src/types/entities'
 
 export class CreateCarRequestDto implements Partial<CarEntity> {

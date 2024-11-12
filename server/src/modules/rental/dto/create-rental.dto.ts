@@ -5,7 +5,7 @@ import { RentalEntity } from 'src/types/entities'
 export class CreateRentalRequestDto implements Partial<RentalEntity> {
     @IsNotEmpty({ message: '缺乏租赁方' })
     @IsNumber({}, { message: '非数字类型' })
-    userId?: number
+    userId: number
     @IsNotEmpty({ message: '缺乏状态' })
     @IsEnum($Enums.RentalStatus, { message: '状态错误' })
     status: $Enums.RentalStatus
