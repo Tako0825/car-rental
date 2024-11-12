@@ -65,9 +65,11 @@ export class CarMaintenanceService {
         id: number,
         body: UpdateCarMaintenanceRequestDto
     ): Promise<UpdateCarMaintenanceResponseDto> {
+        body.carId
         await this.prisma.findCarMaintenanceEntity(id)
-        const data = pick(body, Object.keys(new CarMaintenanceEntity()))
+        if (body.carId) await this.prisma.findCarEntity(body.carId)
 
+        const data = pick(body, Object.keys(new CarMaintenanceEntity()))
         const updatedCarMaintenance = await this.prisma.carMaintenance.update({
             where: { id },
             data

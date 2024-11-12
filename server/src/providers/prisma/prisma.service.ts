@@ -3,6 +3,7 @@ import { Prisma, PrismaClient } from '@prisma/client'
 import {
     CarEntity,
     CarMaintenanceEntity,
+    FeedbackEntity,
     PaymentEntity,
     RentalEntity,
     UserEntity
@@ -57,6 +58,11 @@ export class PrismaService extends PrismaClient {
             { id },
             { tip: '维修记录不存在' }
         )
+    }
+
+    // 查询反馈记录实体
+    async findFeedbackEntity(id: number) {
+        return await this.findEntity<FeedbackEntity>('feedback', { id }, { tip: '反馈记录不存在' })
     }
 
     // 分页查询
