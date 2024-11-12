@@ -4,7 +4,7 @@ import { IsEmail, IsEnum, IsOptional, MaxLength } from 'class-validator'
 
 export class UpdateUserRequestDto {
     @IsOptional()
-    @IsEmail({}, { message: '邮箱格式不正确' })
+    @IsEmail({}, { message: '邮箱格式错误' })
     email?: string | undefined
     password?: string
     @IsOptional()

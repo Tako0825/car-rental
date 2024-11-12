@@ -3,7 +3,7 @@ import { UserEntity } from 'src/types/entities'
 
 export class RegisterRequestDto implements Partial<UserEntity> {
     @IsNotEmpty({ message: '请输入邮箱' })
-    @IsEmail({}, { message: '邮箱格式不正确' })
+    @IsEmail({}, { message: '邮箱格式错误' })
     email: string
     @IsNotEmpty({ message: '请输入密码' })
     password: string
