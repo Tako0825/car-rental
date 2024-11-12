@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { PrismaService } from './providers/prisma/prisma.service'
 import { UserModule } from './modules/user/user.module'
 import { CarModule } from './modules/car/car.module'
+import { RentalModule } from './modules/rental/rental.module'
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import { CarModule } from './modules/car/car.module'
         AuthModule,
         PrismaModule,
         UserModule,
-        CarModule
+        CarModule,
+        RentalModule
     ],
     controllers: [],
     providers: [JwtStrategy, PrismaService]
