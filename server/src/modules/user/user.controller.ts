@@ -36,6 +36,7 @@ export class UserController {
 
     // 更改
     @Patch(':id')
+    @UseGuards(AuthGuard('jwt'))
     async update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserRequestDto) {
         return await this.userService.update(id, body)
     }

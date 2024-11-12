@@ -26,6 +26,7 @@ export class CarController {
 
     // 创建
     @Post()
+    @UseGuards(AuthGuard('jwt'))
     async create(@Body() body: CreateCarRequestDto) {
         return await this.carService.create(body)
     }
@@ -44,6 +45,7 @@ export class CarController {
 
     // 更改
     @Patch(':id')
+    @UseGuards(AuthGuard('jwt'))
     async update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateCarRequestDto) {
         return await this.carService.update(id, body)
     }

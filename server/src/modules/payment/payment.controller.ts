@@ -24,6 +24,7 @@ export class PaymentController {
 
     // 创建
     @Post()
+    @UseGuards(AuthGuard('jwt'))
     async create(@Body() body: CreatePaymentRequestDto) {
         return await this.paymentService.create(body)
     }
