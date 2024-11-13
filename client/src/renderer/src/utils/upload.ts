@@ -61,8 +61,8 @@ const getUploadToken = async () => {
 const generateKey = () => {
     const date = new Date()
     const year = date.getFullYear()
-    const month = date.getMonth() - 1
-    const day = date.getDay()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
     const key = [year, month, day].join('-') + '/' + v4()
     return key
 }
