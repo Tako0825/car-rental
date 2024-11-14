@@ -2,7 +2,7 @@ import { $Enums } from '@prisma/client'
 import { UserEntity } from 'src/types/entities'
 import { PaginationRequest, PaginationResponse } from 'src/types/pagination'
 
-export class FindManyUserRequestDto extends PaginationRequest implements Partial<UserEntity> {
+export class FindPageUserRequestDto extends PaginationRequest implements Partial<UserEntity> {
     id?: number
     createdAt?: Date
     email?: string
@@ -11,7 +11,7 @@ export class FindManyUserRequestDto extends PaginationRequest implements Partial
     username?: string
 }
 
-export class FindManyUserResponseDto extends PaginationResponse {
+export class FindPageUserResponseDto extends PaginationResponse {
     list: Omit<UserEntity, 'password' | 'email'>[]
 }
 

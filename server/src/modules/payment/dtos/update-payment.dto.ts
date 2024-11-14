@@ -1,6 +1,7 @@
 import { IsOptional } from 'class-validator'
 import { CreatePaymentRequestDto } from './create-payment.dto'
 import { $Enums } from '@prisma/client'
+import { PaymentEntity } from '../../../types/entities'
 
 export class UpdatePaymentRequestDto implements Partial<CreatePaymentRequestDto> {
     @IsOptional()
@@ -9,4 +10,7 @@ export class UpdatePaymentRequestDto implements Partial<CreatePaymentRequestDto>
     paymentDate?: Date
 }
 
-export class UpdatePaymentResponseDto {}
+export class UpdatePaymentResponseDto {
+    tip: string
+    payment: PaymentEntity
+}

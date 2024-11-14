@@ -11,11 +11,11 @@ import {
     ParseIntPipe
 } from '@nestjs/common'
 import { RentalService } from './rental.service'
-import { CreateRentalRequestDto } from './dto/create-rental.dto'
-import { UpdateRentalRequestDto } from './dto/update-rental.dto'
+import { CreateRentalRequestDto } from './dtos/create-rental.dto'
+import { UpdateRentalRequestDto } from './dtos/update-rental.dto'
 import { BodyValidationPipe } from 'src/pipes/body-validation.pipe'
 import { AuthGuard } from '@nestjs/passport'
-import { FindPageRentalRequestDto } from './dto/find-rental.dto'
+import { FindPageRentalRequestDto } from './dtos/find-rental.dto'
 import { CarService } from '../car/car.service'
 import { UserService } from '../user/user.service'
 

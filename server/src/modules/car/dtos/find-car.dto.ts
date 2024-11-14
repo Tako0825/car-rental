@@ -2,7 +2,7 @@ import { $Enums } from '@prisma/client'
 import { CarEntity } from 'src/types/entities'
 import { PaginationRequest, PaginationResponse } from 'src/types/pagination'
 
-export class FindManyCarRequestDto extends PaginationRequest implements Partial<CarEntity> {
+export class FindPageCarRequestDto extends PaginationRequest implements Partial<CarEntity> {
     batteryLevel?: number
     createdAt?: Date
     id?: number
@@ -18,7 +18,7 @@ export class FindManyCarRequestDto extends PaginationRequest implements Partial<
     year?: number
 }
 
-export class FindManyCarResponseDto extends PaginationResponse {
+export class FindPageCarResponseDto extends PaginationResponse {
     list: CarEntity[]
 }
 

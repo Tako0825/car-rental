@@ -1,12 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common'
-import { CreateRentalRequestDto, CreateRentalResponseDto } from './dto/create-rental.dto'
-import { UpdateRentalRequestDto, UpdateRentalResponseDto } from './dto/update-rental.dto'
+import { CreateRentalRequestDto, CreateRentalResponseDto } from './dtos/create-rental.dto'
+import { UpdateRentalRequestDto, UpdateRentalResponseDto } from './dtos/update-rental.dto'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
 import {
     FindOneRentalResponseDto,
     FindPageRentalRequestDto,
     FindPageRentalResponseDto
-} from './dto/find-rental.dto'
+} from './dtos/find-rental.dto'
 import { RentalEntity } from 'src/types/entities'
 import { pick } from 'lodash'
 

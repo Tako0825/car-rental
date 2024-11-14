@@ -13,9 +13,9 @@ import {
 import { FeedbackService } from './feedback.service'
 import { AuthGuard } from '@nestjs/passport'
 import { BodyValidationPipe } from 'src/pipes/body-validation.pipe'
-import { CreateFeedbackRequestDto } from './dto/create-feedback.dto'
-import { FindPageFeedbackRequestDto } from './dto/find-feedback.dto'
-import { UpdateFeedbackRequestDto } from './dto/update-feedback.dto'
+import { CreateFeedbackRequestDto } from './dtos/create-feedback.dto'
+import { FindPageFeedbackRequestDto } from './dtos/find-feedback.dto'
+import { UpdateFeedbackRequestDto } from './dtos/update-feedback.dto'
 
 @Controller('feedback')
 @UsePipes(BodyValidationPipe)

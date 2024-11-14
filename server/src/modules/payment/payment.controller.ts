@@ -11,10 +11,10 @@ import {
     UseGuards
 } from '@nestjs/common'
 import { PaymentService } from './payment.service'
-import { CreatePaymentRequestDto } from './dto/create-payment.dto'
+import { CreatePaymentRequestDto } from './dtos/create-payment.dto'
 import { BodyValidationPipe } from 'src/pipes/body-validation.pipe'
-import { FindPagePaymentRequestDto } from './dto/find-payment.dto'
-import { UpdatePaymentRequestDto } from './dto/update-payment.dto'
+import { FindPagePaymentRequestDto } from './dtos/find-payment.dto'
+import { UpdatePaymentRequestDto } from './dtos/update-payment.dto'
 import { AuthGuard } from '@nestjs/passport'
 
 @Controller('payment')

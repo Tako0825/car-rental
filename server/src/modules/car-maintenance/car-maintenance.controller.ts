@@ -11,11 +11,11 @@ import {
     ParseIntPipe
 } from '@nestjs/common'
 import { CarMaintenanceService } from './car-maintenance.service'
-import { CreateCarMaintenanceRequestDto } from './dto/create-car-maintenance.dto'
-import { UpdateCarMaintenanceRequestDto } from './dto/update-car-maintenance.dto'
+import { CreateCarMaintenanceRequestDto } from './dtos/create-car-maintenance.dto'
+import { UpdateCarMaintenanceRequestDto } from './dtos/update-car-maintenance.dto'
 import { BodyValidationPipe } from 'src/pipes/body-validation.pipe'
 import { AuthGuard } from '@nestjs/passport'
-import { FindPageCarMaintenanceRequestDto } from './dto/find-car-maintenance.dto'
+import { FindPageCarMaintenanceRequestDto } from './dtos/find-car-maintenance.dto'
 
 @Controller('car-maintenance')
 @UsePipes(BodyValidationPipe)

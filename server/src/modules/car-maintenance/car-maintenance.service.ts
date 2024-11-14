@@ -2,19 +2,19 @@ import { Injectable } from '@nestjs/common'
 import {
     CreateCarMaintenanceRequestDto,
     CreateCarMaintenanceResponseDto
-} from './dto/create-car-maintenance.dto'
+} from './dtos/create-car-maintenance.dto'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
 import {
     FindOneCarMaintenanceResponseDto,
     FindPageCarMaintenanceRequestDto,
     FindPageCarMaintenanceResponseDto
-} from './dto/find-car-maintenance.dto'
+} from './dtos/find-car-maintenance.dto'
 import { CarMaintenanceEntity } from 'src/types/entities'
 import { pick } from 'lodash'
 import {
     UpdateCarMaintenanceRequestDto,
     UpdateCarMaintenanceResponseDto
-} from './dto/update-car-maintenance.dto'
+} from './dtos/update-car-maintenance.dto'
 
 @Injectable()
 export class CarMaintenanceService {

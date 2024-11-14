@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common'
 import { pick } from 'lodash'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
 import { FeedbackEntity } from 'src/types/entities'
-import { CreateFeedbackRequestDto, CreateFeedbackResponseDto } from './dto/create-feedback.dto'
+import { CreateFeedbackRequestDto, CreateFeedbackResponseDto } from './dtos/create-feedback.dto'
 import {
     FindPageFeedbackRequestDto,
     FindPageFeedbackResponseDto,
     FindOneFeedbackResponseDto
-} from './dto/find-feedback.dto'
-import { UpdateFeedbackRequestDto, UpdateFeedbackResponseDto } from './dto/update-feedback.dto'
+} from './dtos/find-feedback.dto'
+import { UpdateFeedbackRequestDto, UpdateFeedbackResponseDto } from './dtos/update-feedback.dto'
 
 @Injectable()
 export class FeedbackService {

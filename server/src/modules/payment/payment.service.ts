@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
-import { CreatePaymentRequestDto, CreatePaymentResponseDto } from './dto/create-payment.dto'
-import { UpdatePaymentRequestDto, UpdatePaymentResponseDto } from './dto/update-payment.dto'
+import { CreatePaymentRequestDto, CreatePaymentResponseDto } from './dtos/create-payment.dto'
+import { UpdatePaymentRequestDto, UpdatePaymentResponseDto } from './dtos/update-payment.dto'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
 import {
     FindOnePaymentResponseDto,
     FindPagePaymentRequestDto,
     FindPagePaymentResponseDto
-} from './dto/find-payment.dto'
+} from './dtos/find-payment.dto'
 import { pick } from 'lodash'
 import { PaymentEntity } from 'src/types/entities'
 
