@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
@@ -9,7 +9,13 @@ const api = {}
 // just add to the DOM global.
 if (process.contextIsolated) {
     try {
-        contextBridge.exposeInMainWorld('electron', electronAPI)
+        contextBridge.exposeInMainWorld('electron', {
+            ...electronAPI,
+            minimizeWindow: () => ipcRenderer.invoke('window-minimize'),
+            maximizeWindow: () => ipcRenderer.invoke('window-maximize'),
+            closeWindow: () => ipcRenderer.invoke('window-close'),
+            getIsMaximized: () => ipcRenderer.invoke('get-is-maximized')
+        })
         contextBridge.exposeInMainWorld('api', api)
     } catch (error) {
         console.error(error)

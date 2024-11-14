@@ -4,12 +4,27 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 function createWindow(): void {
+    const bounds: Partial<Electron.Rectangle> = {
+        width: 1080,
+        height: 760
+    }
+    const setBounds = (state: typeof bounds) => {
+        for (const key in state) {
+            const value = state[key]
+            bounds[key] = value
+        }
+    }
+    const { width: initialWidth, height: initialHeight } = bounds
+
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        width: 1080,
-        height: 780,
+        width: initialWidth,
+        height: initialHeight,
         show: false,
         autoHideMenuBar: true,
+        frame: false,
+        transparent: true,
+        resizable: false,
         ...(process.platform === 'linux' ? { icon } : {}),
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
@@ -19,6 +34,38 @@ function createWindow(): void {
 
     mainWindow.on('ready-to-show', () => {
         mainWindow.show()
+        const { x, y } = mainWindow.getBounds()
+        setBounds(Object.assign(bounds, { x, y }))
+    })
+
+    // 最小化窗口
+    ipcMain.handle('window-minimize', () => {
+        mainWindow.minimize()
+    })
+
+    // 缩放窗口
+    ipcMain.handle('window-maximize', () => {
+        const isMaximized = mainWindow.isMaximized()
+        if (!isMaximized) {
+            mainWindow.maximize()
+        } else {
+            const { x, y } = bounds
+            mainWindow.setBounds({
+                width: initialWidth,
+                height: initialHeight,
+                x,
+                y
+            })
+        }
+        return !isMaximized
+    })
+
+    // 获取窗口最大化状态
+    ipcMain.handle('get-is-maximized', () => mainWindow.isMaximized())
+
+    // 关闭窗口
+    ipcMain.handle('window-close', () => {
+        mainWindow.close()
     })
 
     mainWindow.webContents.setWindowOpenHandler(details => {
