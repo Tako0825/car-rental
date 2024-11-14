@@ -63,4 +63,4 @@ export const AntUpload: React.FC<AntUploadProps> = memo(({ handleSuccess }) => {
     )
 })
 
-AntUpload.displayName = 'TakoUpload'
+AntUpload.displayName = 'AntUpload'

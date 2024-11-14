@@ -1,2 +1,5 @@
 @import './base.css';
 @import './media.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
