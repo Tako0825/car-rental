@@ -1,6 +1,7 @@
 import * as qiniu from 'qiniu-js'
 import { v4 } from 'uuid'
 import { HmacSHA1, enc } from 'crypto-js'
+import { api } from '@renderer/api'
 
 const domainName = import.meta.env.VITE_DOWNLOAD_URL // 加速域名
 const accessKey = import.meta.env.VITE_ACCESS_KEY // ACCESS_KEY
@@ -8,7 +9,7 @@ const secretKey = import.meta.env.VITE_SECRET_KEY // SECRET_KEY
 
 // 上传文件
 export const uploadFile = async (file: File): Promise<string> => {
-    const token = await getUploadToken()
+    const { uploadToken: token } = await api.upload.getUploadToken()
     const key = generateKey()
     const putExtra = {}
     const config = {
@@ -41,20 +42,6 @@ export const generateDownloadURL = (baseURL: string) => {
     const token = [accessKey, signBase64].join(':')
     const downloadURL = `${baseURL}?e=${e}&token=${token}`
     return downloadURL
-}
-
-// 获取上传凭据
-const getUploadToken = async () => {
-    const json = await fetch('http://localhost:4000/api/upload', {
-        method: 'GET',
-        headers: {
-            Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoiZWxlY3Ryb24wMTE3QGdtYWlsLmNvbSJ9LCJzaWduIjoiY2FyLXJlbnRhbCIsImlhdCI6MTczMTQxMDc5OSwiZXhwIjoxNzM0MDAyNzk5fQ.2AUGysX-ril6qI51yeiDdLM9W90jgsn_Djw4mC3c__8'
-        }
-    })
-    const res = await json.json()
-    const token = res['data']['uploadToken']
-    return token
 }
 
 // 生成文件夹名

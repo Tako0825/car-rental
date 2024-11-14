@@ -16,7 +16,7 @@ export interface ErrorResponse<T> {
 const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoiZWxlY3Ryb24wMTE3QGdtYWlsLmNvbSJ9LCJzaWduIjoiY2FyLXJlbnRhbCIsImlhdCI6MTczMTQxMDc5OSwiZXhwIjoxNzM0MDAyNzk5fQ.2AUGysX-ril6qI51yeiDdLM9W90jgsn_Djw4mC3c__8'
 
-class HttpRequest {
+class HttpHandler {
     private readonly timeout: number = 10000
     private readonly baseURL: string = process.env.VITE_API_URL || ''
     private readonly instance: AxiosInstance
@@ -78,7 +78,7 @@ class HttpRequest {
         url: string
         body?: RequestDto
         params?: RequestDto
-        config: AxiosRequestConfig
+        config?: AxiosRequestConfig
     }): Promise<ResponseDto> {
         const { method, body = {}, params = {}, config = {} } = args
         const url = this.parseURL(args.url, params)
@@ -96,4 +96,4 @@ class HttpRequest {
     }
 }
 
-export const { http } = new HttpRequest()
+export const { http } = new HttpHandler()
