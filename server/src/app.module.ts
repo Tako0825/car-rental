@@ -11,6 +11,7 @@ import { PaymentModule } from './modules/payment/payment.module'
 import { CarMaintenanceModule } from './modules/car-maintenance/car-maintenance.module'
 import { FeedbackModule } from './modules/feedback/feedback.module'
 import { UploadModule } from './modules/upload/upload.module'
+import { CarListingModule } from './modules/car-listing/car-listing.module'
 
 @Module({
     imports: [
@@ -31,7 +32,8 @@ import { UploadModule } from './modules/upload/upload.module'
         PaymentModule,
         CarMaintenanceModule,
         FeedbackModule,
-        UploadModule
+        UploadModule,
+        CarListingModule
     ],
     controllers: [],
     providers: [JwtStrategy, PrismaService]

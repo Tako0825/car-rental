@@ -22,19 +22,31 @@ model User {
   role      Role     @default(user) /// 角色
   createdAt DateTime @default(now()) /// 创建时间
   updatedAt DateTime @default(now()) @updatedAt /// 更新时间
+  avatar    String?
 
-  cars      Car[] // 用户的出租车辆
-  rentals   Rental[] /// 用户的租赁记录
-  feedbacks Feedback[] /// 用户的反馈记录
+  carListings CarListing[] // 用户的出租车辆
+  rentals     Rental[] /// 用户的租赁记录
+  feedbacks   Feedback[] /// 用户的反馈记录
 }
 
 // 车辆表
 model Car {
-  id           Int       @id @default(autoincrement()) // 车辆ID，自动递增
+  id        Int      @id @default(autoincrement()) // 车辆ID，自动递增
+  model     String /// 型号
+  make      String /// 品牌
+  createdAt DateTime @default(now()) /// 录入时间
+  updatedAt DateTime @default(now()) @updatedAt /// 信息更新时间
+  cover     String? /// 图片
+
+  carListings CarListing[] /// 车辆的租赁记录
+}
+
+// 上架车辆表
+model CarListing {
+  id           Int       @id @default(autoincrement()) // 上架车辆ID，自动递增
   userId       Int? /// 外键，关联用户ID
+  carId        Int? /// 外键，关联车辆ID
   licensePlate String    @unique /// 牌照
-  model        String /// 型号
-  make         String /// 品牌
   year         Int /// 年份
   status       CarStatus /// 状态（可用、租出、维修中等）
   batteryLevel Int /// 电池电量（百分比）
@@ -43,27 +55,28 @@ model Car {
   createdAt    DateTime  @default(now()) /// 录入时间
   updatedAt    DateTime  @default(now()) @updatedAt /// 信息更新时间
 
-  user        User?            @relation(fields: [userId], references: [id]) /// 关联 User 表
   rentals     Rental[] /// 车辆的租赁记录
   maintenance CarMaintenance[] /// 车辆的维护记录
   feedbacks   Feedback[] /// 车辆的反馈记录
+  user        User?            @relation(fields: [userId], references: [id]) /// 关联 User 表
+  car         Car?             @relation(fields: [carId], references: [id]) /// 关联 Car 表
 }
 
 // 租赁记录表
 model Rental {
-  id         Int          @id @default(autoincrement()) // 租赁记录ID，自动递增
-  userId     Int /// 外键，关联用户ID
-  carId      Int /// 外键，关联车辆ID
-  startTime  DateTime /// 租赁开始时间
-  endTime    DateTime /// 租赁结束时间
-  totalPrice Float /// 租赁总价
-  status     RentalStatus /// 租赁状态（进行中、已完成、已取消）
-  createdAt  DateTime     @default(now()) /// 记录创建时间
-  updatedAt  DateTime     @default(now()) @updatedAt /// 记录更新时间
+  id           Int          @id @default(autoincrement()) // 租赁记录ID，自动递增
+  userId       Int /// 外键，关联用户ID
+  carListingId Int /// 外键，关联上架车辆ID
+  startTime    DateTime /// 租赁开始时间
+  endTime      DateTime /// 租赁结束时间
+  totalPrice   Float /// 租赁总价
+  status       RentalStatus /// 租赁状态（进行中、已完成、已取消）
+  createdAt    DateTime     @default(now()) /// 记录创建时间
+  updatedAt    DateTime     @default(now()) @updatedAt /// 记录更新时间
 
-  user     User      @relation(fields: [userId], references: [id]) /// 关联 User 表
-  car      Car       @relation(fields: [carId], references: [id]) /// 关联 Car 表
-  payments Payment[] /// 反向关系字段，关联 Payment 表
+  user       User       @relation(fields: [userId], references: [id]) /// 关联 User 表
+  carListing CarListing @relation(fields: [carListingId], references: [id]) /// 关联 CarListing 表
+  payments   Payment[] /// 反向关系字段，关联 Payment 表
 }
 
 // 支付记录表
@@ -79,26 +92,26 @@ model Payment {
 // 车辆维护记录表
 model CarMaintenance {
   id              Int      @id @default(autoincrement()) // 维护记录ID，自动递增
-  carId           Int /// 外键，关联车辆ID
+  carListingId    Int /// 外键，关联上架车辆ID
   maintenanceType String /// 维护类型（如电池更换等）
   description     String? /// 维护描述（可选）
   createdAt       DateTime @default(now()) /// 记录创建时间
   updatedAt       DateTime @default(now()) @updatedAt /// 记录更新时间
 
-  car Car @relation(fields: [carId], references: [id]) /// 关联 Car 表
+  carListing CarListing @relation(fields: [carListingId], references: [id]) /// 关联 CarListing 表
 }
 
 // 用户反馈表
 model Feedback {
-  id        Int      @id @default(autoincrement()) // 反馈记录ID，自动递增
-  userId    Int /// 外键，关联用户ID
-  carId     Int /// 外键，关联车辆ID
-  rating    Int /// 评分（如1-5星）
-  comment   String? /// 反馈内容（可选）
-  createdAt DateTime @default(now()) /// 记录创建时间
+  id           Int      @id @default(autoincrement()) // 反馈记录ID，自动递增
+  userId       Int /// 外键，关联用户ID
+  carListingId Int /// 外键，关联ID
+  rating       Int /// 评分（如1-5星）
+  comment      String? /// 反馈内容（可选）
+  createdAt    DateTime @default(now()) /// 记录创建时间
 
-  user User @relation(fields: [userId], references: [id]) /// 关联 User 表
-  car  Car  @relation(fields: [carId], references: [id]) /// 关联 Car 表
+  user       User       @relation(fields: [userId], references: [id]) /// 关联 User 表
+  carListing CarListing @relation(fields: [carListingId], references: [id]) /// 关联 CarListing 表
 }
 
 // 用户角色枚举

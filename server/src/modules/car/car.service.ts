@@ -16,10 +16,11 @@ export class CarService {
 
     // 创建
     async create(body: CreateCarRequestDto): Promise<CreateCarResponseDto> {
-        const dbCar = await this.prisma.car.findUnique({
-            where: { licensePlate: body.licensePlate }
+        const { make, model } = body
+        const dbCar = await this.prisma.car.findFirst({
+            where: { AND: [{ make }, { model }] }
         })
-        if (dbCar) throw new HttpException({ tip: '牌号已存在' }, 422)
+        if (dbCar) throw new HttpException({ tip: '品牌与型号已存在' }, 422)
 
         const createdCar = await this.prisma.car.create({ data: body })
         return {
@@ -77,23 +78,8 @@ export class CarService {
     async remove(id: number) {
         await this.prisma.findEntity<CarEntity>('car', { id }, { tip: '车辆不存在' })
         const carId = id
-        const dbCar = await this.prisma.car.findUnique({
-            where: { id },
-            select: { rentals: true }
-        })
-        const rentalIds = dbCar.rentals.map(rental => rental.id)
-
-        await this.prisma.$transaction(async () => {
-            await this.prisma.payment.deleteMany({
-                where: { rentalId: { in: rentalIds } }
-            })
-            await Promise.all([
-                this.prisma.rental.deleteMany({ where: { carId } }),
-                this.prisma.feedback.deleteMany({ where: { carId } }),
-                this.prisma.carMaintenance.deleteMany({ where: { carId } })
-            ])
-            await this.prisma.car.delete({ where: { id } })
-        })
+        await this.prisma.carListing.deleteMany({ where: { carId } })
+        await this.prisma.car.delete({ where: { id } })
 
         return {
             tip: '删除成功'

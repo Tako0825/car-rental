@@ -22,7 +22,7 @@ export class CarMaintenanceService {
 
     // 创建
     async create(body: CreateCarMaintenanceRequestDto): Promise<CreateCarMaintenanceResponseDto> {
-        await this.prisma.findCarEntity(body.carId)
+        await this.prisma.findCarListingEntity(body.carListingId)
         const createdCarMaintenance = await this.prisma.carMaintenance.create({ data: body })
         return {
             tip: '创建成功',

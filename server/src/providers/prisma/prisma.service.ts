@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common'
 import { Prisma, PrismaClient } from '@prisma/client'
 import {
     CarEntity,
+    CarListingEntity,
     CarMaintenanceEntity,
     FeedbackEntity,
     PaymentEntity,
@@ -63,6 +64,11 @@ export class PrismaService extends PrismaClient {
     // 查询反馈记录实体
     async findFeedbackEntity(id: number) {
         return await this.findEntity<FeedbackEntity>('feedback', { id }, { tip: '反馈记录不存在' })
+    }
+
+    // 查询反馈记录实体
+    async findCarListingEntity(id: number) {
+        return await this.findEntity<CarListingEntity>('carListing', { id }, { tip: '车辆不存在' })
     }
 
     // 分页查询
