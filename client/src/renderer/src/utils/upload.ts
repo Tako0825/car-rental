@@ -20,8 +20,7 @@ export const uploadFile = async (file: File): Promise<string> => {
     return new Promise(resolve => {
         const observer = {
             complete(res: { key: string; hash: string }) {
-                const baseURL = [domainName, res.key].join('/')
-                const downloadURL = generateDownloadURL(baseURL)
+                const downloadURL = generateDownloadURL('/' + res.key)
                 resolve(downloadURL)
             }
         }
@@ -29,9 +28,10 @@ export const uploadFile = async (file: File): Promise<string> => {
     })
 }
 
-// 生成下载凭据
-export const generateDownloadURL = (baseURL: string) => {
+// 生成有效下载地址
+export const generateDownloadURL = (url: string) => {
     const e = generateE()
+    const baseURL = domainName + url
     const urlWithE = `${baseURL}?e=${e}`
     const sign = HmacSHA1(urlWithE, secretKey)
     const signBase64 = sign
@@ -56,8 +56,8 @@ const generateKey = () => {
 
 // 生成过期时间戳
 const generateE = () => {
-    const duration = 10 * 60 * 1000
+    const duration = 300 * 1000 // 有效时间 300 秒
     const timestamp = Date.now()
-    const e = timestamp + duration
+    const e = (timestamp + duration).toString().slice(0, -3)
     return e
 }

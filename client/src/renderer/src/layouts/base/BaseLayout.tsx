@@ -15,7 +15,7 @@ export const BaseLayout: React.FC<BaseLayoutProps> = memo(({ children }) => {
                 <BaseAside /> {/* 左侧菜单栏 */}
             </Col>
             <Col className="flex-1 h-full flex-col">
-                <Row className="w-full h-16 flex drag justify-between items-center px-10">
+                <Row className="w-full h-16 flex drag justify-between items-center px-5">
                     <BaseHeader /> {/* 顶部工具栏 */}
                 </Row>
                 <main className="p-5 pb-20 full overflow-auto">{children}</main>

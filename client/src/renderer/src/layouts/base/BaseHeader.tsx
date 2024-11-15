@@ -22,7 +22,7 @@ export const BaseHeader: React.FC = memo(() => {
     return (
         <>
             <Input className="no-drag w-52" />
-            <Space className="no-drag">
+            <Space className="no-drag" size={20}>
                 <MinusOutlined onClick={minimizeWindow} />
                 {isMaximized ? (
                     <CompressOutlined onClick={maximizeWindow} />
