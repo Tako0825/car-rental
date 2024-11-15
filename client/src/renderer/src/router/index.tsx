@@ -1,7 +1,9 @@
 import { lazy, Suspense } from 'react'
 import { Spin as Loading } from 'antd'
-import { RouteObject } from 'react-router'
+import { RouteObject } from 'react-router-dom'
 
+const User = lazy(() => import('../views/user'))
+const Car = lazy(() => import('../views/car'))
 const Dashboard = lazy(() => import('../views/dashboard'))
 const Rental = lazy(() => import('../views/rental'))
 const Community = lazy(() => import('../views/community'))
@@ -30,6 +32,16 @@ export const routes: RouteType[] = [
         path: '/',
         element: <LazyComponent component={Dashboard} />,
         label: '工作台'
+    },
+    {
+        path: '/user',
+        element: <LazyComponent component={User} />,
+        label: '用户管理'
+    },
+    {
+        path: '/car',
+        element: <LazyComponent component={Car} />,
+        label: '车辆管理'
     },
     {
         path: '/rental',

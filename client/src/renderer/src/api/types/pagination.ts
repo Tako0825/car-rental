@@ -4,8 +4,9 @@ export interface PaginationRequest {
 }
 
 export interface PaginationResponse {
-    page: number
-    pageSize: number
-    totalCount: number
-    totalPages: number
+    pagination: {
+        current: number
+        pageSize: number
+        total: number
+    }
 }

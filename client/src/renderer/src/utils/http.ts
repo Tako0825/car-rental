@@ -18,7 +18,7 @@ const token =
 
 class HttpHandler {
     private readonly timeout: number = 10000
-    private readonly baseURL: string = process.env.VITE_API_URL || ''
+    private readonly baseURL: string = import.meta.env.VITE_API_URL ?? ''
     private readonly instance: AxiosInstance
 
     constructor() {
@@ -57,7 +57,7 @@ class HttpHandler {
     }
 
     // Params 转换为 QueryString
-    private parseURL(baseURL: string, params: object): string {
+    parseParamsToURL(baseURL: string, params: object): string {
         if (Object.keys(params).length < 1) {
             return baseURL
         }
@@ -81,19 +81,21 @@ class HttpHandler {
         config?: AxiosRequestConfig
     }): Promise<ResponseDto> {
         const { method, body = {}, params = {}, config = {} } = args
-        const url = this.parseURL(args.url, params)
+        const url = this.parseParamsToURL(args.url, params)
 
         switch (method) {
             case 'get':
-                return this.instance.get(url, config)
+                return await this.instance.get(url, config)
             case 'post':
-                return this.instance.post(url, body, config)
+                return await this.instance.post(url, body, config)
             case 'patch':
-                return this.instance.patch(url, body, config)
+                return await this.instance.patch(url, body, config)
             case 'delete':
-                return this.instance.delete(url, config)
+                return await this.instance.delete(url, config)
         }
     }
 }
 
-export const { http } = new HttpHandler()
+const httpHandler = new HttpHandler()
+
+export const http = httpHandler.http.bind(httpHandler)

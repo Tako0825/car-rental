@@ -27,9 +27,8 @@ export const BaseAside: React.FC = memo(() => {
 
     return (
         <>
-            <Space className="logo-container pl-10 py-5 flex items-center">
-                <img className="w-8 no-drag logo" src={ElectronSvg} alt="logo" />
-                <h2 className="electron no-drag text-2xl">Rental</h2>
+            <Space className="logo-container p-5 flex items-center">
+                <img className="w-10 no-drag logo" src={ElectronSvg} alt="logo" />
             </Space>
             <Menu
                 onClick={onClick}

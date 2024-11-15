@@ -16,7 +16,6 @@ export const AntProvider: React.FC<AntProviderProps> = memo(({ children }) => {
         colorTextBase: '#2c3e50',
         colorBgBase: '#f8fafc',
         fontSize: 14,
-        sizeStep: 6,
         wireframe: false
     }
 
