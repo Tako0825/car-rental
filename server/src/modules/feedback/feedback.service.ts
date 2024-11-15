@@ -16,8 +16,8 @@ export class FeedbackService {
 
     // 创建
     async create(body: CreateFeedbackRequestDto): Promise<CreateFeedbackResponseDto> {
-        const { carId, userId } = body
-        await this.prisma.findCarEntity(carId)
+        const { carListingId, userId } = body
+        await this.prisma.findCarListingEntity(carListingId)
         await this.prisma.findUserEntity(userId)
 
         const createdFeedback = await this.prisma.feedback.create({ data: body })

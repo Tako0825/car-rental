@@ -74,13 +74,13 @@ export class UserService {
     async remove(id: number) {
         const dbUser = await this.prisma.user.findUnique({
             where: { id },
-            select: { rentals: true, cars: true }
+            select: { rentals: true, carListings: true }
         })
         if (!dbUser) throw new HttpException({ tip: '用户不存在' }, 422)
 
-        const carIds = dbUser.cars.map(car => car.id)
+        const carListingIds = dbUser.carListings.map(carListing => carListing.id)
         const rentalsFromCar = await this.prisma.rental.findMany({
-            where: { carId: { in: carIds } }
+            where: { carListingId: { in: carListingIds } }
         })
         const rentalsFromUser = dbUser.rentals
         const rentalIds = [...rentalsFromCar, ...rentalsFromUser].map(rental => rental.id)
@@ -95,16 +95,16 @@ export class UserService {
                 })
                 await Promise.all([
                     this.prisma.rental.deleteMany({
-                        where: { OR: [{ carId: { in: carIds } }, { userId }] }
+                        where: { OR: [{ carListingId: { in: carListingIds } }, { userId }] }
                     }),
                     this.prisma.feedback.deleteMany({
-                        where: { OR: [{ carId: { in: carIds } }, { userId }] }
+                        where: { OR: [{ carListingId: { in: carListingIds } }, { userId }] }
                     }),
                     this.prisma.carMaintenance.deleteMany({
-                        where: { OR: [{ carId: { in: carIds } }] }
+                        where: { OR: [{ carListingId: { in: carListingIds } }] }
                     })
                 ])
-                await this.prisma.car.deleteMany({ where: { userId } })
+                await this.prisma.carListing.deleteMany({ where: { userId } })
                 await this.prisma.user.delete({ where: { id } })
             })
             return {

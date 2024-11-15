@@ -1,4 +1,13 @@
-import { $Enums, Car, CarMaintenance, Feedback, Payment, Rental, User } from '@prisma/client'
+import {
+    $Enums,
+    Car,
+    CarListing,
+    CarMaintenance,
+    Feedback,
+    Payment,
+    Rental,
+    User
+} from '@prisma/client'
 
 export class UserEntity implements User {
     id: number = 0
@@ -8,16 +17,25 @@ export class UserEntity implements User {
     role: $Enums.Role = 'user'
     updatedAt: Date = new Date()
     username: string = ''
+    avatar: string = ''
 }
 
 export class CarEntity implements Car {
     id: number = 0
-    userId: number = 0
     createdAt: Date = new Date()
     updatedAt: Date = new Date()
-    licensePlate: string = ''
     model: string = ''
     make: string = ''
+    cover: string = ''
+}
+
+export class CarListingEntity implements CarListing {
+    id: number = 0
+    createdAt: Date = new Date()
+    updatedAt: Date = new Date()
+    userId: number = 0
+    carId: number = 0
+    licensePlate: string = ''
     year: number = 0
     status: $Enums.CarStatus = 'available'
     batteryLevel: number = 0
@@ -30,11 +48,11 @@ export class RentalEntity implements Rental {
     createdAt: Date = new Date()
     updatedAt: Date = new Date()
     userId: number = 0
-    status: $Enums.RentalStatus = 'active'
-    carId: number = 0
+    carListingId: number = 0
     startTime: Date = new Date()
     endTime: Date = new Date()
     totalPrice: number = 0
+    status: $Enums.RentalStatus = 'active'
 }
 
 export class PaymentEntity implements Payment {
@@ -48,7 +66,7 @@ export class CarMaintenanceEntity implements CarMaintenance {
     id: number = 0
     createdAt: Date = new Date()
     updatedAt: Date = new Date()
-    carId: number = 0
+    carListingId: number = 0
     maintenanceType: string = ''
     description: string = ''
 }
@@ -57,7 +75,7 @@ export class FeedbackEntity implements Feedback {
     id: number = 0
     createdAt: Date = new Date()
     userId: number = 0
-    carId: number = 0
+    carListingId: number = 0
     rating: number = 0
     comment: string = ''
 }

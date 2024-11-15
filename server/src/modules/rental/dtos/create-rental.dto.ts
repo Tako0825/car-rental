@@ -21,6 +21,8 @@ export class CreateRentalRequestDto implements Partial<RentalEntity> {
     @IsNotEmpty({ message: '缺乏租赁价格' })
     @IsNumber({}, { message: '非数字类型' })
     totalPrice: number
+    @IsNotEmpty({ message: '缺乏上架车辆' })
+    carListingId: number
 }
 
 export class CreateRentalResponseDto {
