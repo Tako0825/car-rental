@@ -32,18 +32,21 @@ export class FeedbackService {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new FeedbackEntity()))
 
-        const { list, totalCount, totalPages } = await this.prisma.findPage<FeedbackEntity>({
+        const { list, current, total } = await this.prisma.findPage<FeedbackEntity>({
             model: 'feedback',
+            page,
+            pageSize,
             orderBy: { createdAt: 'desc' },
             filters
         })
 
         return {
-            page,
-            pageSize,
-            totalCount,
-            totalPages,
-            list
+            list,
+            pagination: {
+                current,
+                pageSize,
+                total
+            }
         }
     }
 

@@ -37,18 +37,21 @@ export class CarMaintenanceService {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new CarMaintenanceEntity()))
 
-        const { list, totalCount, totalPages } = await this.prisma.findPage<CarMaintenanceEntity>({
+        const { list, current, total } = await this.prisma.findPage<CarMaintenanceEntity>({
             model: 'carMaintenance',
+            page,
+            pageSize,
             orderBy: { updatedAt: 'desc' },
             filters
         })
 
         return {
-            page,
-            pageSize,
-            totalCount,
-            totalPages,
-            list
+            list,
+            pagination: {
+                current,
+                pageSize,
+                total
+            }
         }
     }
 

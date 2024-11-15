@@ -32,23 +32,21 @@ export class RentalService {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new RentalEntity()))
 
-        const totalCount = await this.prisma.rental.count({ where: filters })
-        const totalPages = Math.ceil(totalCount / pageSize)
-        const list = await this.prisma.rental.findMany({
-            where: filters,
-            orderBy: {
-                updatedAt: 'desc'
-            },
-            skip: (page - 1) * pageSize,
-            take: pageSize
+        const { list, current, total } = await this.prisma.findPage<RentalEntity>({
+            model: 'rental',
+            page,
+            pageSize,
+            orderBy: { updatedAt: 'desc' },
+            filters
         })
 
         return {
-            page,
-            pageSize,
-            totalCount,
-            totalPages,
-            list
+            list,
+            pagination: {
+                current,
+                pageSize,
+                total
+            }
         }
     }
 

@@ -31,18 +31,21 @@ export class PaymentService {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new PaymentEntity()))
 
-        const { list, totalCount, totalPages } = await this.prisma.findPage<PaymentEntity>({
+        const { list, current, total } = await this.prisma.findPage<PaymentEntity>({
             model: 'payment',
+            page,
+            pageSize,
             orderBy: { paymentDate: 'desc' },
             filters
         })
 
         return {
-            page,
-            pageSize,
-            totalCount,
-            totalPages,
-            list
+            list,
+            pagination: {
+                current,
+                pageSize,
+                total
+            }
         }
     }
 

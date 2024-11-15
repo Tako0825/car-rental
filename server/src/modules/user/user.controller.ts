@@ -7,7 +7,8 @@ import {
     Delete,
     UsePipes,
     UseGuards,
-    ParseIntPipe
+    ParseIntPipe,
+    Query
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { UpdateUserRequestDto } from './dtos/update-user.dto'
@@ -24,8 +25,8 @@ export class UserController {
 
     // 分页查询
     @Get()
-    async findPage(@Body() body: FindPageUserRequestDto) {
-        return await this.userService.findPage(body)
+    async findPage(@Query() query: FindPageUserRequestDto) {
+        return await this.userService.findPage(query)
     }
 
     // 详细查询

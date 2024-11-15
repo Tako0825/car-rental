@@ -68,36 +68,33 @@ export class PrismaService extends PrismaClient {
     // 分页查询
     async findPage<Entity>(args: {
         model: PrismaModelKeys
-        page?: number
-        pageSize?: number
+        page: number
+        pageSize: number
         orderBy?: Partial<Record<keyof Entity, Prisma.SortOrder>>
         filters?: Partial<Entity>
     }): Promise<{
-        page: number
+        current: number
         pageSize: number
-        totalCount: number
-        totalPages: number
+        total: number
         list: Entity[]
     }> {
         try {
             const { model, page = 1, pageSize = 10, orderBy = {}, filters = {} } = args
 
-            const totalCount = await (this[model] as any).count({
+            const total = await (this[model] as any).count({
                 where: filters
             })
-            const totalPages = Math.ceil(totalCount / pageSize)
             const list = await (this[model] as any).findMany({
                 where: filters,
                 orderBy,
-                skip: (page - 1) * pageSize,
-                take: pageSize
+                skip: (+page - 1) * +pageSize,
+                take: +pageSize
             })
 
             return {
-                page,
+                current: page,
                 pageSize,
-                totalCount,
-                totalPages,
+                total,
                 list
             }
         } catch (error) {

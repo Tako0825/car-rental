@@ -22,18 +22,21 @@ export class UserService {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new UserEntity()))
 
-        const { list, totalCount, totalPages } = await this.prisma.findPage<UserEntity>({
+        const { list, current, total } = await this.prisma.findPage<UserEntity>({
             model: 'user',
+            page,
+            pageSize,
             orderBy: { updatedAt: 'desc' },
             filters
         })
 
         return {
-            page,
-            pageSize,
-            totalCount,
-            totalPages,
-            list: list.map(user => omit(user, ['password', 'email']))
+            list: list.map(user => omit(user, ['password', 'email'])),
+            pagination: {
+                current,
+                pageSize,
+                total
+            }
         }
     }
 
