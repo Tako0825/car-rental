@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { UpdateUserRequestDto } from './dtos/update-user.dto'
-import { FindManyUserRequestDto } from './dtos/find-user.dto'
+import { FindPageUserRequestDto } from './dtos/find-user.dto'
 import { BodyValidationPipe } from 'src/pipes/body-validation.pipe'
 import { AuthGuard } from '@nestjs/passport'
 import { RoleGuard } from '../auth/role.guard'
@@ -24,7 +24,7 @@ export class UserController {
 
     // 分页查询
     @Get()
-    async findPage(@Body() body: FindManyUserRequestDto) {
+    async findPage(@Body() body: FindPageUserRequestDto) {
         return await this.userService.findPage(body)
     }
 

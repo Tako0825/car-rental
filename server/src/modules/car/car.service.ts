@@ -3,8 +3,8 @@ import { pick } from 'lodash'
 import { CarEntity } from 'src/types/entities'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
 import {
-    FindManyCarRequestDto,
-    FindManyCarResponseDto,
+    FindPageCarRequestDto,
+    FindPageCarResponseDto,
     FindOneCarResponseDto
 } from './dtos/find-car.dto'
 import { UpdateCarRequestDto, UpdateCarResponseDto } from './dtos/update-car.dto'
@@ -29,7 +29,7 @@ export class CarService {
     }
 
     // 分页查询
-    async findPage(body: FindManyCarRequestDto): Promise<FindManyCarResponseDto> {
+    async findPage(body: FindPageCarRequestDto): Promise<FindPageCarResponseDto> {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new CarEntity()))
 

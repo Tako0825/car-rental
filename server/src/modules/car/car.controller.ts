@@ -15,7 +15,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { RequiredRoles } from 'src/decorators/required-roles/required-roles.decorator'
 import { RoleGuard } from '../auth/role.guard'
 import { CreateCarRequestDto } from './dtos/create-car.dto'
-import { FindManyCarRequestDto } from './dtos/find-car.dto'
+import { FindPageCarRequestDto } from './dtos/find-car.dto'
 import { UpdateCarRequestDto } from './dtos/update-car.dto'
 import { BodyValidationPipe } from 'src/pipes/body-validation.pipe'
 
@@ -33,7 +33,7 @@ export class CarController {
 
     // 分页查询
     @Get()
-    async findPage(@Body() body: FindManyCarRequestDto) {
+    async findPage(@Body() body: FindPageCarRequestDto) {
         return await this.carService.findPage(body)
     }
 

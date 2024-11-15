@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { UpdateUserRequestDto, UpdateUserResponseDto } from './dtos/update-user.dto'
 import {
-    FindManyUserRequestDto,
-    FindManyUserResponseDto,
+    FindPageUserRequestDto,
+    FindPageUserResponseDto,
     FindOneUserResponseDto
 } from './dtos/find-user.dto'
 import { PrismaService } from 'src/providers/prisma/prisma.service'
@@ -18,7 +18,7 @@ export class UserService {
     ) {}
 
     // 分页查询
-    async findPage(body: FindManyUserRequestDto): Promise<FindManyUserResponseDto> {
+    async findPage(body: FindPageUserRequestDto): Promise<FindPageUserResponseDto> {
         const { page, pageSize, ...other } = body
         const filters = pick(other, Object.keys(new UserEntity()))
 
