@@ -14,7 +14,7 @@ export interface ErrorResponse<T> {
 }
 
 const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoiZWxlY3Ryb24wMTE3QGdtYWlsLmNvbSJ9LCJzaWduIjoiY2FyLXJlbnRhbCIsImlhdCI6MTczMTQxMDc5OSwiZXhwIjoxNzM0MDAyNzk5fQ.2AUGysX-ril6qI51yeiDdLM9W90jgsn_Djw4mC3c__8'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoiMjA2MDM2NDkyMkBxcS5jb20ifSwic2lnbiI6ImNhci1yZW50YWwiLCJpYXQiOjE3MzE3NjcxNTUsImV4cCI6MTczNDM1OTE1NX0.fAM_lpQyjJC9WOGdwWiR9M0-sByTrT02bYpw6YdC8-M'
 
 class HttpHandler {
     private readonly timeout: number = 10000
@@ -26,7 +26,7 @@ class HttpHandler {
             baseURL: this.baseURL,
             timeout: this.timeout,
             headers: {
-                Authorization: token,
+                Authorization: 'Bearer ' + token,
                 'Content-Type': 'application/json'
             }
         })
@@ -38,6 +38,10 @@ class HttpHandler {
 
     // 响应成功拦截器
     private handleResponseSuccess<T>(response: AxiosResponse<SuccessResponse<T>>): T {
+        const data = response.data.data
+        if (data['tip']) {
+            message.success(data['tip'])
+        }
         return response.data.data
     }
 

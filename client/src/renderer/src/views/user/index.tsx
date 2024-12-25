@@ -2,11 +2,11 @@ import { api } from '@renderer/api'
 import { FindPageUserRequestDto } from '@renderer/api/modules/user'
 import { UserEntity } from '@renderer/api/types/entities'
 import { RoleEnum } from '@renderer/api/types/enums'
-import { DetailType } from '@renderer/types/common'
+import { UserCard } from '@renderer/components/feature/UserCard'
 import { generateDownloadURL } from '@renderer/utils/upload'
-import { Avatar, Button, Drawer, Space, Table, Tag } from 'antd'
+import { Avatar, Button, Space, Table, Tag } from 'antd'
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
-import { debounce } from 'lodash'
+import { clone, debounce } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 
 export type UserVo = Omit<UserEntity, 'password' | 'email'>
@@ -19,7 +19,8 @@ const UserView: React.FC = memo(() => {
     const [params, setParams] = useState<FindPageUserRequestDto>({ page: 1, pageSize: 10 })
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
-    const [detail, setDetail] = useState<DetailType<UserVo>>()
+    const [mode, setMode] = useState<'view' | 'edit'>('view')
+    const [id, setId] = useState<number>()
 
     // 列表项
     const columns: ColumnsType<UserVo> = [
@@ -44,14 +45,7 @@ const UserView: React.FC = memo(() => {
             title: '权限',
             key: 'role',
             dataIndex: 'role',
-            render: (role: string) => {
-                const enums = {
-                    [RoleEnum.user]: '#1abc9c',
-                    [RoleEnum.admin]: '#ff6b81',
-                    [RoleEnum.manager]: '#4834d4'
-                }
-                return <Tag color={enums[RoleEnum[role]]}>{role.toUpperCase()}</Tag>
-            }
+            render: (role: RoleEnum) => <Tag color={RoleEnum[role]}>{role.toUpperCase()}</Tag>
         },
         {
             title: '创建时间',
@@ -65,10 +59,18 @@ const UserView: React.FC = memo(() => {
             width: '150px',
             render: (_, row) => (
                 <Space size={14}>
-                    <Button type="link" onClick={() => showDrawer('view', row)} className="p-0">
+                    <Button
+                        type="link"
+                        onClick={() => openUserCard('view', row.id)}
+                        className="p-0"
+                    >
                         查看
                     </Button>
-                    <Button type="link" onClick={() => showDrawer('edit', row)} className="p-0">
+                    <Button
+                        type="link"
+                        onClick={() => openUserCard('edit', row.id)}
+                        className="p-0"
+                    >
                         编辑
                     </Button>
                 </Space>
@@ -99,14 +101,29 @@ const UserView: React.FC = memo(() => {
         setParams({ ...params, page, pageSize })
     }
 
-    // method: 打开抽屉
-    const showDrawer = (mode: 'view' | 'edit', row: UserVo) => {
-        setDetail({ mode, row })
+    // methods: 打开用户卡片
+    const openUserCard = (mode: 'view' | 'edit', id: number) => {
         setOpen(true)
+        setMode(mode)
+        setId(id)
     }
 
-    // method: 关闭抽屉
-    const closeDrawer = () => setOpen(false)
+    // methods: 关闭用户卡片
+    const closeUserCard = (updatedUser?: UserVo) => {
+        setOpen(false)
+        if (updatedUser) {
+            setDataSource(state => {
+                const shallow = clone(state)
+                const index = shallow.findIndex(user => user.id === updatedUser.id)
+                if (index > -1) {
+                    shallow[index] = updatedUser
+                    return shallow
+                } else {
+                    return state
+                }
+            })
+        }
+    }
 
     return (
         <>
@@ -117,19 +134,7 @@ const UserView: React.FC = memo(() => {
                 onChange={onPaginationChange}
                 loading={loading}
             />
-            <Drawer
-                placement="bottom"
-                closable={false}
-                onClose={closeDrawer}
-                open={open}
-                height={'90vh'}
-                style={{
-                    width: '65vw',
-                    margin: 'auto'
-                }}
-            >
-                <p>{JSON.stringify(detail?.row)}</p>
-            </Drawer>
+            <UserCard id={id} mode={mode} open={open} onClose={closeUserCard} />
         </>
     )
 })

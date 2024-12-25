@@ -1,13 +1,25 @@
 import React, { memo, useState } from 'react'
-import { Button, Upload, UploadFile } from 'antd'
-import { uploadFile } from '../utils/upload'
+import { Button, GetProp, Upload, UploadFile, UploadProps } from 'antd'
+import { UploadFileResult, uploadFile } from '../../utils/upload'
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
+
+// 获取预览图片
+const getBase64 = (file: FileType): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = error => reject(error)
+    })
 
 interface AntUploadProps {
-    handleSuccess?: (url: string) => void
+    onSuccess?: (result: UploadFileResult) => void
+    onPreview?: (url: string) => void
 }
 
 // 上传组件
-export const AntUpload: React.FC<AntUploadProps> = memo(({ handleSuccess }) => {
+export const AntUpload: React.FC<AntUploadProps> = memo(({ onSuccess, onPreview }) => {
     // responsive data
     const [fileList, setFileList] = useState<UploadFile[]>([])
     const [uploading, setUploading] = useState(false)
@@ -18,8 +30,8 @@ export const AntUpload: React.FC<AntUploadProps> = memo(({ handleSuccess }) => {
         const file = fileList[0]
         if (file instanceof File) {
             try {
-                const url = await uploadFile(file)
-                handleSuccess && handleSuccess(url)
+                const result = await uploadFile(file)
+                onSuccess && onSuccess(result)
             } catch (error) {
                 console.error('Upload failed:', error)
             } finally {
@@ -32,18 +44,20 @@ export const AntUpload: React.FC<AntUploadProps> = memo(({ handleSuccess }) => {
     const beforeUpload = async (file: UploadFile) => {
         setUploading(false)
         setFileList([file])
+        const preview = await getBase64(file as FileType)
+        if (onPreview) onPreview(preview)
         return false
     }
 
     // method: 删除文件
-    const onRemove = () => {
+    const handleRemove = () => {
         setFileList([])
     }
 
     return (
         <>
             <Upload
-                onRemove={onRemove}
+                onRemove={handleRemove}
                 beforeUpload={beforeUpload}
                 fileList={fileList}
                 showUploadList

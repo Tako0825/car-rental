@@ -46,7 +46,7 @@ export default {
 
     // 详细查询
     findOne: async (id: number) =>
-        await http<object, FindPageUserResponseDto>({
+        await http<object, FindOneUserResponseDto>({
             method: 'get',
             url: `/user/${id}`
         }),

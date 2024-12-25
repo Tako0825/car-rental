@@ -9,6 +9,7 @@ export interface UserEntity {
     role: RoleEnum
     updatedAt: Date
     username: string
+    avatar: string
 }
 
 // 车辆实体

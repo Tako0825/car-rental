@@ -44,6 +44,7 @@
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
+    "dayjs": "^1.11.13",
     "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
     "electron-vite": "^2.3.0",

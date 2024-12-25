@@ -7,8 +7,13 @@ const domainName = import.meta.env.VITE_DOWNLOAD_URL // 加速域名
 const accessKey = import.meta.env.VITE_ACCESS_KEY // ACCESS_KEY
 const secretKey = import.meta.env.VITE_SECRET_KEY // SECRET_KEY
 
+export type UploadFileResult = {
+    downloadURL: string
+    key: string
+}
+
 // 上传文件
-export const uploadFile = async (file: File): Promise<string> => {
+export const uploadFile = async (file: File): Promise<UploadFileResult> => {
     const { uploadToken: token } = await api.upload.getUploadToken()
     const key = generateKey()
     const putExtra = {}
@@ -20,8 +25,12 @@ export const uploadFile = async (file: File): Promise<string> => {
     return new Promise(resolve => {
         const observer = {
             complete(res: { key: string; hash: string }) {
-                const downloadURL = generateDownloadURL('/' + res.key)
-                resolve(downloadURL)
+                const key = '/' + res.key
+                const downloadURL = generateDownloadURL(key)
+                resolve({
+                    downloadURL,
+                    key
+                })
             }
         }
         observable.subscribe(observer)
@@ -44,7 +53,7 @@ export const generateDownloadURL = (url: string) => {
     return downloadURL
 }
 
-// 生成文件夹名
+// 生成文件名
 const generateKey = () => {
     const date = new Date()
     const year = date.getFullYear()

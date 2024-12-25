@@ -1,8 +1,8 @@
 // 用户角色枚举
 export enum RoleEnum {
-    user, /// 普通用户
-    admin, /// 管理员
-    manager /// 车辆管理人员
+    user = '#1abc9c', /// 普通用户
+    admin = '#ff6b81', /// 管理员
+    manager = '#4834d4' /// 车辆管理人员
 }
 
 // 车辆状态枚举

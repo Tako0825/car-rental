@@ -70,6 +70,9 @@ devDependencies:
   autoprefixer:
     specifier: ^10.4.20
     version: 10.4.20(postcss@8.4.49)
+  dayjs:
+    specifier: ^1.11.13
+    version: 1.11.13
   electron:
     specifier: ^31.0.2
     version: 31.7.3
@@ -2246,7 +2249,6 @@ packages:
 
   /dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
-    dev: false
 
   /debug@4.3.7:
     resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
